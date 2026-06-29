@@ -1,0 +1,4 @@
+# 배포에는 index.html 만 사용. 그 외 모두 제외(개인 데이터 보호)
+*
+!index.html
+!.gitignore
