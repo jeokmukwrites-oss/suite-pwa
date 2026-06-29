@@ -594,7 +594,10 @@ const Launch=(function(){
     g.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>del(b.getAttribute("data-del"))));
     g.querySelectorAll(".lcard").forEach(c=>c.addEventListener("dblclick",()=>launch(c.getAttribute("data-id"))));
   }
-  function launch(id){const a=apps.find(x=>x.id===id);if(!a)return;const url=normalizeUrl(a.url);if(!url){alert("URL 이 비어 있습니다.");return;}
+  function launch(id){const a=apps.find(x=>x.id===id);if(!a)return;let url=normalizeUrl(a.url);if(!url){alert("URL 이 비어 있습니다.");return;}
+    // AI Studio 앱은 소유 계정으로 열려야 함: ai.studio→aistudio.google.com 변환 후 authuser(이메일) 부착
+    url=url.replace(/^https?:\/\/ai\.studio\//,"https://aistudio.google.com/");
+    if(a.email&&/^https?:\/\/aistudio\.google\.com\//.test(url)) url+=(url.includes("?")?"&":"?")+"authuser="+encodeURIComponent(a.email);
     a.open_count=(a.open_count||0)+1;a.last_opened=nowIso();save();window.open(url,"_blank","noopener");render();}
   function openEditor(id){if(readOnly)return;editingId=id||null;const a=id?apps.find(x=>x.id===id):null;
     $("l_sheetTitle").textContent=a?"앱 편집":"앱 추가";$("l_fName").value=a?(a.name||""):"";$("l_fUrl").value=a?(a.url||""):"";
